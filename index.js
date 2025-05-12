@@ -32,6 +32,25 @@ async function run() {
     const appartmants_collection = client.db("Lux-tower").collection("appartments");
     const announcements_collection = client.db("Lux-tower").collection("announcements");
 
+        app.get("/announcements", async (req, res) => {
+      const result = await announcements_collection.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/announcements", async (req, res) => {
+      const announcements = req.body;
+      const result = await announcements_collection.insertOne(announcements);
+      res.send(result);
+    });
+
+    app.delete("/announcements/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await announcements_collection.deleteOne(query);
+      res.send(result);
+    });
+
+
     app.get("/users", async (req, res) => {
       const result = await users_collection.find().toArray();
       res.send(result);
