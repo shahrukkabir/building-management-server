@@ -69,6 +69,23 @@ async function run() {
       res.send(result);
     });
 
+        app.get("/appartmants", async (req, res) => {
+      const result = await appartmants_collection.find().toArray();
+      res.send(result);
+    });
+
+    app.get("/appartmantsPasition", async (req, res) => {
+      const page = parseInt(req.query.page);
+      const size = parseInt(req.query.size);
+      const result = await appartmants_collection.find().skip(page * size).limit(size).toArray();
+      res.send(result);
+    });
+
+    app.get("/appartmentlength", async (req, res) => {
+      const result = await appartmants_collection.find().toArray();
+      res.send({ count: result.length });
+    });
+
 
     app.get("/users", async (req, res) => {
       const result = await users_collection.find().toArray();
