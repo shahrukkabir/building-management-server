@@ -32,7 +32,36 @@ async function run() {
     const appartmants_collection = client.db("Lux-tower").collection("appartments");
     const announcements_collection = client.db("Lux-tower").collection("announcements");
 
-        app.get("/contact_message", async (req, res) => {
+    app.get("/payments", async (req, res) => {
+      const result = await payment_collection.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/payments", async (req, res) => {
+      const payments = req.body;
+      const result = await payment_collection.insertOne(payments);
+      res.send(result);
+    });
+
+    const stripe = require("stripe")(process.env.STRIPE_KEY);
+
+    app.post("/createPaymentIntent", async (req, res) => {
+      const { price } = req.body;
+      const amount = parseInt(price * 100);
+      try {
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount,
+          currency: "usd",
+          payment_method_types: ["card"],
+        });
+        res.send({ clientSecret: paymentIntent.client_secret });
+      } catch (error) {
+        res.status(500).send({ error: error.message });
+      }
+    });
+
+
+    app.get("/contact_message", async (req, res) => {
       const result = await contact_collection.find().toArray();
       res.send(result);
     });
@@ -69,7 +98,7 @@ async function run() {
       res.send(result);
     });
 
-        app.get("/appartmants", async (req, res) => {
+    app.get("/appartmants", async (req, res) => {
       const result = await appartmants_collection.find().toArray();
       res.send(result);
     });
