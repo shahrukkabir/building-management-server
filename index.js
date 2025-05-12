@@ -115,7 +115,7 @@ async function run() {
       res.send({ count: result.length });
     });
 
-        app.get("/agreements", async (req, res) => {
+    app.get("/agreements", async (req, res) => {
       const result = await agreements_collection.find().toArray();
       res.send(result);
     });
@@ -177,6 +177,41 @@ async function run() {
       const result = await users_collection.deleteOne(query);
       res.send(result);
     });
+
+    app.get("/coupons", async (req, res) => {
+      const result = await coupons_collection.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/coupons", async (req, res) => {
+      const coupons = req.body;
+      const result = await coupons_collection.insertOne(coupons);
+      res.send(result);
+    });
+
+    app.delete("/coupons/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await coupons_collection.deleteOne(query);
+      res.send(result);
+    });
+
+    app.put("/coupons/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const coupon = req.body;
+      const updatedservices = {
+        $set: {
+          offerDigit: coupon.offerDigit,
+          offerType: coupon.offerType,
+          code: coupon.code,
+          description: coupon.description,
+        },
+      };
+      const result = await coupons_collection.updateOne(query, updatedservices);
+      res.send(result);
+    });
+
 
 
     await client.connect();
