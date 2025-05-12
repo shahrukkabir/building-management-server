@@ -22,6 +22,18 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+
+
+    const users_collection = client.db("Lux-tower").collection("users");
+    const payment_collection = client.db("Lux-tower").collection("payment");
+    const coupons_collection = client.db("Lux-tower").collection("coupons");
+    const contact_collection = client.db("Lux-tower").collection("contact_message");
+    const agreements_collection = client.db("Lux-tower").collection("agreements");
+    const appartmants_collection = client.db("Lux-tower").collection("appartments");
+    const announcements_collection = client.db("Lux-tower").collection("announcements");
+
+
+
     await client.connect();
     console.log("Connected to MongoDB!");
 
